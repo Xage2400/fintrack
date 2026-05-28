@@ -1,0 +1,30 @@
+service: fintrack-api
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  deploymentBucket:
+    name: fintrack-api-deployments-ash
+  environment:
+    MONGO_URI: "mongodb+srv://nyashakurimwi_db_user:fintrack123@cluster0.b98u4mc.mongodb.net/fintrack?retryWrites=true&w=majority&appName=Cluster0"
+    JWT_SECRET: "fintrack_super_secret_2024"
+    NODE_ENV: production
+
+functions:
+  app:
+    handler: lambda.handler
+    events:
+      - httpApi:
+          path: /{proxy+}
+          method: any
+      - httpApi:
+          path: /
+          method: any
+
+plugins:
+  - serverless-offline
+
+package:
+  exclude:
+    - node_modules/.cache/**
